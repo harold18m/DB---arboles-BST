@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interfaz de la base de datos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</head>
+<body class="bg-slate-800">
+    <div class="mx-auto px-12 py-8">
+        <h1 class="text-white text-5xl font-bold my-4">Interfaz de la base de datos</h1>
+    </div>
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex">
+            <div class="w-1/3 p-4 bg-white rounded-lg shadow-lg max-h-[450px]">
+                <form action="/insertar" method="post">
+                    <h2 class="text-xl font-bold mb-4">Insertar Persona</h2>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre:</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="nombre" type="text" name="nombre" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="apellido">Apellido:</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="apellido" type="text" name="apellido" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="edad">Edad:</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="edad" type="number" min="18" name="edad" required>
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="telefono">Teléfono:</label>
+                        <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="telefono" type="tel" name="telefono" required>
+                    </div>
+                    <div class="flex items-center justify-end">
+                        <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Insertar">
+                    </div>
+                </form>
+            </div>
+
+            <div class="w-2/3 px-4">
+                <div class="bg-white rounded-lg shadow-lg p-4">
+                    <form action="/buscar" method="post" class="">
+                        <h2 class="text-xl font-bold mb-2">Buscar Persona</h2>
+                        <div class="mb-4">
+                            <label class="block text-gray-700 text-sm font-bold mb-2" for="buscarClave">Codigo:</label>
+                            <input class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="buscarClave" type="text" name="clave">
+                        </div>
+                        <div class="flex items-center justify-end">
+                            <input class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit" value="Buscar">
+                        </div>
+                    </form>
+                </div>
+                <div class="">
+                    <li class="bg-slate-500 p-4 rounded-lg my-4 flex items-center justify-between">
+                        <span class="w-1/6 text-white">Código</span>
+                        <span class="w-1/6 text-white">Nombre</span>
+                        <span class="w-1/6 text-white">Apellido</span>
+                        <span class="w-1/6 text-white">Edad</span>                           
+                        <span class="w-1/6 text-white">Teléfono</span> 
+                        <span class="w-1/6 text-white">Opciones</span> 
+                    </li>
+                    <ul>
+                        {% for usuario in usuarios %}
+                        <li class="bg-slate-200 p-4 rounded-lg mb-4 flex items-center justify-between">
+                            <span class="w-1/6">{{ usuario.codigo }}</span>
+                            <span class="w-1/6">{{ usuario.nombre }}</span>
+                            <span class="w-1/6">{{ usuario.apellido }}</span>
+                            <span class="w-1/6">{{ usuario.edad }}</span>
+                            <span class="w-1/6">{{ usuario.telefono }}</span>
+                            <div class="w-1/6 flex items-center space-x-4">
+                                <form action="/editar" method="post" class="">
+                                    <button type="submit" class="hover:bg-blue-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out">
+                                        <i class="fas fa-edit hover:text-white"></i>
+                                    </button>    
+                                </form>
+
+                                <form action="/eliminar" method="post" class="">
+                                    <input type="hidden" name="codigo" value="{{ usuario.codigo }}">
+                                    <button type="submit" class="hover:bg-red-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out">
+                                        <i class="fas fa-trash-alt hover:text-white"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>  
+                <div class="">
+                    <button class="text-center text-white rounded">
+                        Generar seeders
+                    </button>
+                </div>              
+            </div>            
+        </div>
+    </div>
+</body>
+
+
+</html>
