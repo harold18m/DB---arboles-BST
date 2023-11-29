@@ -38,7 +38,22 @@ class BaseDeDatosBST:
         if clave < nodo.clave:
             return self._buscar_recursivo(nodo.izquierdo, clave)
         return self._buscar_recursivo(nodo.derecho, clave)
+    
+    def editar_persona(self, codigo, nuevo_nombre, nuevo_apellido, nueva_edad, nuevo_telefono):
+        nodo = self._buscar_nodo(self.raiz, codigo)
+        if nodo:
+            # Nodo encontrado, actualiza la instancia de Persona
+            nodo.objeto.nombre = nuevo_nombre
+            nodo.objeto.apellido = nuevo_apellido
+            nodo.objeto.edad = nueva_edad
+            nodo.objeto.telefono = nuevo_telefono
 
+    def _buscar_nodo(self, nodo, codigo):
+        if nodo is None or nodo.clave == codigo:
+            return nodo
+        if codigo < nodo.clave:
+            return self._buscar_nodo(nodo.izquierdo, codigo)
+        return self._buscar_nodo(nodo.derecho, codigo)
 
     def eliminar(self, clave):
         self.raiz = self._eliminar_recursivo(self.raiz, clave)

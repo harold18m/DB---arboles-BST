@@ -1,6 +1,6 @@
-import string , random
 from flask import Flask, render_template, request, redirect
-# from seeders import insertar_usuarios_prueba
+from seeders import generar_codigo
+from seeders import insertar_usuarios_prueba
 from Persona import Persona
 from Arbol import BaseDeDatosBST
 
@@ -8,18 +8,16 @@ app = Flask(__name__)
 
 bd = BaseDeDatosBST()
 
-def generar_codigo():
-    caracteres = string.ascii_letters + string.digits
-    codigo = ''.join(random.choice(caracteres) for _ in range(5))
-    return codigo
 
 @app.route('/')
 def index():
     usuarios = bd.obtener_usuarios()
     return render_template('index.html', usuarios=usuarios)
 
-# def seeders():
-#     insertar_usuarios_prueba(5)
+@app.route('/seeders')
+def seeders():
+    insertar_usuarios_prueba(bd, 5)
+    return redirect('/')
 
 @app.route('/insertar', methods=['POST'])
 def insertar():
@@ -28,9 +26,19 @@ def insertar():
     apellido = request.form['apellido']
     edad = int(request.form['edad'])
     telefono = request.form['telefono']
-    
     persona = Persona(codigo, nombre, apellido, edad, telefono)
     bd.insertar(codigo, persona)
+
+    return redirect('/')
+
+@app.route('/editar', methods=['POST'])
+def actualizar():
+    codigo = request.form['codigo']
+    nombre = request.form['nombre']
+    apellido = request.form['apellido']
+    edad = int(request.form['edad'])
+    telefono = request.form['telefono']
+    bd.editar_persona(codigo, nombre, apellido, edad, telefono)
 
     return redirect('/')
 

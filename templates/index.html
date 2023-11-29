@@ -6,6 +6,75 @@
     <title>Interfaz de la base de datos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        /* Estilos para el modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 500px; /* Limita el ancho del modal */
+            border-radius: 8px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .modal-body {
+            margin-bottom: 10px;
+        }
+
+        .modal-footer {
+            text-align: right;
+        }
+
+        .modal-footer button {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .modal-footer button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body class="bg-slate-800">
     <div class="mx-auto px-12 py-8">
@@ -69,11 +138,10 @@
                             <span class="w-1/6">{{ usuario.edad }}</span>
                             <span class="w-1/6">{{ usuario.telefono }}</span>
                             <div class="w-1/6 flex items-center space-x-4">
-                                <form action="/editar" method="post" class="">
-                                    <button type="submit" class="hover:bg-blue-500 text-black font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-300 ease-in-out">
+                                    <input type="hidden" name="codigo" value="{{ usuario.codigo }}">
+                                    <button type="button" class="edit-button" onclick="openEditModal('{{ usuario.codigo }}', '{{ usuario.nombre }}', '{{ usuario.apellido }}', '{{ usuario.edad }}', '{{ usuario.telefono }}')">
                                         <i class="fas fa-edit hover:text-white"></i>
                                     </button>    
-                                </form>
 
                                 <form action="/eliminar" method="post" class="">
                                     <input type="hidden" name="codigo" value="{{ usuario.codigo }}">
@@ -87,14 +155,58 @@
                     </ul>
                 </div>  
                 <div class="">
-                    <button class="text-center text-white rounded">
-                        Generar seeders
+                    <button class="bg-white p-4 text-center rounded-full">
+                        <a href="/seeders">Generar seeders</a>
                     </button>
                 </div>              
             </div>            
         </div>
     </div>
+    <!-- Modal de edición -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <span class="close" onclick="closeEditModal" type="button">&times;</span>
+                <h2>Editar Usuario</h2>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de edición -->
+                <form id="editForm" action="/editar" method="post">
+                    <!-- Campos del formulario -->
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="saveChanges()">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
 </body>
+<script>
+    function openEditModal(codigo, nombre, apellido, edad, telefono) {
+        document.getElementById('editModal').style.display = 'block';
+        document.getElementById('editForm').innerHTML = `
+        <input type="hidden" name="codigo" value="${codigo}" class="hidden">
+        <label for="nombre" class="block text-gray-700 text-sm font-bold mb-2">Nombre:</label>
+        <input type="text" name="nombre" value="${nombre}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
+        <label for="apellido" class="block text-gray-700 text-sm font-bold mb-2">Apellido:</label>
+        <input type="text" name="apellido" value="${apellido}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
+        <label for="edad" class="block text-gray-700 text-sm font-bold mb-2">Edad:</label>
+        <input type="text" name="edad" value="${edad}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
+        <label for="telefono" class="block text-gray-700 text-sm font-bold mb-2">Teléfono:</label>
+        <input type="text" name="telefono" value="${telefono}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-4">
+
+        `;
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').style.display = 'none';
+    }
+
+    function saveChanges() {
+        document.getElementById('editForm').submit();
+        closeEditModal();
+    }
+</script>
 
 
 </html>
